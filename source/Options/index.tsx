@@ -2,11 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {browser, Bookmarks} from 'webextension-polyfill-ts';
 import {safeLoad} from 'js-yaml';
+import * as d3 from 'd3';
+import graph from './Graph/miserables.json';
+// @ts-ignore
+import render from './Graph/ui.js';
 
 import Options from './Options';
 
 ReactDOM.render(<Options />, document.getElementById('options-root'));
 
+(window as typeof window & {d3: typeof d3}).d3 = d3;
 const rootId = '4921';
 
 (async function main(): Promise<void> {
@@ -18,6 +23,11 @@ const rootId = '4921';
         console.log(subTree, getMetaData(subTree).tags);
     }
     console.timeEnd('get bookmarks');
+    // type Graph = {
+    //     nodes: { id: string, group: number }[],
+    //     links: { source: string, target: string, value: number }[]
+    // };
+    render(graph);
 })();
 
 function* iterate(
