@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {browser, Bookmarks} from 'webextension-polyfill-ts';
 import {safeLoad} from 'js-yaml';
 import * as d3 from 'd3';
-import graph from './Graph/miserables.json';
 // @ts-ignore
 import render from './Graph/ui.js';
 
@@ -16,18 +15,42 @@ const rootId = '4921';
 
 (async function main(): Promise<void> {
     const tree: Bookmarks.BookmarkTreeNode[] = await browser.bookmarks.getTree();
+    const allTags = new Set();
+    const tagsPairs: { [key: string]: number } = {};
 
     console.time('get bookmarks');
     const filter = (subtree: Bookmarks.BookmarkTreeNode): boolean => getMetaData(subtree).tags.length > 0;
     for (const subTree of iterate(tree, {filter})) {
-        console.log(subTree, getMetaData(subTree).tags);
+        const {tags} = getMetaData(subTree);
+        for(const tag of tags) {
+            allTags.add(tag);
+        }
+        for(let i = 0; i < tags.length - 1; i+=1) {
+            for(let j = i + 1; j < tags.length; j+=1) {
+                const key = JSON.stringify([tags[i], tags[j]].sort());
+                tagsPairs[key] = tagsPairs[key] || 0;
+                tagsPairs[key] += 1;
+            }
+        }
     }
+    const myGraph = {
+        nodes: [...allTags]
+            .map((id, i) => {
+                return {id, group: i};
+            }),
+        links: Object.entries(tagsPairs)
+            .map(([key, value]) => {
+                const [source, target] = JSON.parse(key);
+                return {source, target, value};
+            })
+    };
+    console.log(myGraph);
     console.timeEnd('get bookmarks');
     // type Graph = {
     //     nodes: { id: string, group: number }[],
     //     links: { source: string, target: string, value: number }[]
     // };
-    render(graph);
+    render(myGraph);
 })();
 
 function* iterate(
