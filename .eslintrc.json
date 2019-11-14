@@ -7,7 +7,12 @@
 		"no-console": "off",
 		"no-extend-native": "off",
 		"react/jsx-props-no-spreading": "off",
-		"jsx-a11y/label-has-associated-control": "off"
+		"jsx-a11y/label-has-associated-control": "off",
+
+		// my rules
+		"prettier/prettier": 0,
+		"no-use-before-define": 1,
+		"no-console": 1
 	},
 	"env": {
 		"webextensions": true
