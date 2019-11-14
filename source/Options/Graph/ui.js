@@ -8,9 +8,13 @@ const height = +svg.attr('height');
 const baseColor = d3.scaleOrdinal(d3.schemeAccent);// TODO an
 
 const simulation = d3.forceSimulation()
-    .force('link', d3.forceLink().id(function (d) {
-        return d.id;
-    }))
+    .force(
+        'link',
+        d3.forceLink()
+            .id((d) => {return d.id})
+            .distance(({value}) => {return 200 / value})
+            .strength(0.1)
+    )
     .force('charge', d3.forceManyBody())
     .force('center', d3.forceCenter(width / 2, height / 2));
 
