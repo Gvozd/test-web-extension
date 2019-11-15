@@ -5,6 +5,7 @@ import {safeLoad} from 'js-yaml';
 import * as d3 from 'd3';
 // @ts-ignore
 import render from './Graph/ui.js';
+// import {BookmarkTreeNode} from './model';
 
 import Options from './Options';
 

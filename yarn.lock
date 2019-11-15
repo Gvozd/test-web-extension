@@ -8,9 +8,9 @@
   integrity sha512-Eoy8mOGotcG+G2AuV6x74PFEuuUfHPgcdJ2dqY0zuRb3kv73iy+h+72dYAs9YGNF1Q+rYTNigw1hCdzzqKVMnQ==
 
 "@abhijithvijayan/tsconfig@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@abhijithvijayan/tsconfig/-/tsconfig-1.2.0.tgz#5e7ba1622372e3c06dfd89b28e09ec1aa327a8d1"
-  integrity sha512-otOikromiWnZnU0Pgeb+QaKSlNSF7hoJmJh4D5dXWLrRAVsJVV3AN4Cvk/6fesEkWcIcEYNTVzmC587eHTvr0w==
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@abhijithvijayan/tsconfig/-/tsconfig-1.3.0.tgz#cbf70537884dbf61872a1e1645f73f5e6f347edc"
+  integrity sha512-hE16KPLQdygY07f50Lnb4QS2XvUV1anoCNQxsr3rNW2iOAJ/JUhAqIpYqbX6z6UK44ErYHtwUOeW9lOCDjucAQ==
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.1", "@babel/code-frame@^7.5.5":
   version "7.10.1"
@@ -5405,6 +5405,11 @@ mixin-deep@^1.2.0:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+mobx@^5.15.0:
+  version "5.15.7"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.7.tgz#b9a5f2b6251f5d96980d13c78e9b5d8d4ce22665"
+  integrity sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
