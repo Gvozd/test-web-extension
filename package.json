@@ -35,6 +35,8 @@
     "events": "^3.0.0",
     "js-yaml": "^3.13.1",
     "mobx": "^5.15.0",
+    "mobx-react": "^6.1.4",
+    "mobx-utils": "^5.5.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "webext-base-css": "^1.1.0",
