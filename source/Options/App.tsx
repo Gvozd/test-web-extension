@@ -3,42 +3,26 @@ import {browser, Bookmarks} from 'webextension-polyfill-ts';
 import {match} from 'JSONSelect';
 import {fromPromise, IPromiseBasedObservable} from 'mobx-utils';
 import {observer} from 'mobx-react';
-import {TreeView} from '@material-ui/lab';
-import {ExpandMore, ChevronRight} from '@material-ui/icons';
 import promiseAllProperties from 'promise-all-properties';
-import {IObservableArray, observable} from 'mobx';
+import {observable} from 'mobx';
 import {BookmarkTreeNode} from './model';
-import BookmarkTree from './BookmarkTree';
+import {AppData} from './model/AppModel';
+import BookmarksTree from './BookmarksTree';
 
 const rootId = '4921';
-type AppData = {
-    root: BookmarkTreeNode,
-    expanded: IObservableArray<string>
-};
 
 @observer
 export default class App extends Component {
     data: IPromiseBasedObservable<AppData> = fromPromise(promiseAllProperties({
         root: initModel(),
-        expanded: observable([ '1084', '1085'])
+        expanded: observable([ '4921', '5362'])
     }));
 
     render(): React.ReactNode {
         return this.data.case({
             fulfilled({root, expanded}: AppData): ReactNode {
                 return (
-                    <TreeView
-                        expanded={expanded}
-                        onNodeToggle={(_ev, nodes): void => {
-                            // TODO вынести все в отдельный компонент, а хэндлер сделать методом
-                            console.log([...expanded], nodes);
-                            expanded.replace(nodes);
-                        }}
-                        defaultCollapseIcon={<ExpandMore />}
-                        defaultExpandIcon={<ChevronRight />}
-                    >
-                        <BookmarkTree root={root} />
-                    </TreeView>
+                    <BookmarksTree root={root} expanded={expanded} />
                 );
             },
             pending(): ReactNode {

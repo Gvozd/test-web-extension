@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {observer} from 'mobx-react';
 import {TreeItem} from '@material-ui/lab';
-import {BookmarkTreeNode} from './model';
+import {BookmarkTreeNode} from '../model';
 
 @observer
 export default class BookmarkTree extends Component<{root: BookmarkTreeNode}> {
