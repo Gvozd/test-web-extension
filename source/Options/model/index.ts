@@ -29,8 +29,8 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
     }
 
     @computed
-    get children():  Bookmarks.BookmarkTreeNode[] | undefined {
-        return this.getNode().children;
+    get children():  BookmarkTreeNode[] | undefined {
+        return this.getNode().children as BookmarkTreeNode[];
     }
 
     @computed
@@ -84,14 +84,14 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
 
     @autobind
     private subscribe(): void {
-        nodesEvents.addListener(`title:${this.id}`, this.onChangeTitle);
-        nodesEvents.addListener(`url:${this.id}`, this.onChangeUrl);
+        nodesEvents.addListener(`title:${this.node.id}`, this.onChangeTitle);
+        nodesEvents.addListener(`url:${this.node.id}`, this.onChangeUrl);
     }
 
     @autobind
     private unsubscribe(): void {
-        nodesEvents.removeListener(`title:${this.id}`, this.onChangeTitle);
-        nodesEvents.removeListener(`url:${this.id}`, this.onChangeUrl);
+        nodesEvents.removeListener(`title:${this.node.id}`, this.onChangeTitle);
+        nodesEvents.removeListener(`url:${this.node.id}`, this.onChangeUrl);
     }
 
     @autobind

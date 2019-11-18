@@ -3,7 +3,9 @@ import {browser, Bookmarks} from 'webextension-polyfill-ts';
 import {match} from 'JSONSelect';
 import {fromPromise, IPromiseBasedObservable} from 'mobx-utils';
 import {observer} from 'mobx-react';
+import {TreeView} from '@material-ui/lab';
 import {BookmarkTreeNode} from './model';
+import BookmarkTree from './BookmarkTree';
 
 const rootId = '4921';
 @observer
@@ -13,7 +15,11 @@ export default class App extends Component {
     render(): React.ReactNode {
         return this.root.case({
             fulfilled(root: BookmarkTreeNode): ReactNode {
-                return <div>Title: {root.title}</div>;
+                return (
+                    <TreeView>
+                        <BookmarkTree root={root} />
+                    </TreeView>
+                );
             },
             pending(): ReactNode {
                 return <div>Loading...</div>;
