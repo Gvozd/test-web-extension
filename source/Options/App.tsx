@@ -4,19 +4,39 @@ import {match} from 'JSONSelect';
 import {fromPromise, IPromiseBasedObservable} from 'mobx-utils';
 import {observer} from 'mobx-react';
 import {TreeView} from '@material-ui/lab';
+import {ExpandMore, ChevronRight} from '@material-ui/icons';
+import promiseAllProperties from 'promise-all-properties';
+import {IObservableArray, observable} from 'mobx';
 import {BookmarkTreeNode} from './model';
 import BookmarkTree from './BookmarkTree';
 
 const rootId = '4921';
+type AppData = {
+    root: BookmarkTreeNode,
+    expanded: IObservableArray<string>
+};
+
 @observer
 export default class App extends Component {
-    root: IPromiseBasedObservable<BookmarkTreeNode> = fromPromise(initModel());
+    data: IPromiseBasedObservable<AppData> = fromPromise(promiseAllProperties({
+        root: initModel(),
+        expanded: observable([ '1084', '1085'])
+    }));
 
     render(): React.ReactNode {
-        return this.root.case({
-            fulfilled(root: BookmarkTreeNode): ReactNode {
+        return this.data.case({
+            fulfilled({root, expanded}: AppData): ReactNode {
                 return (
-                    <TreeView>
+                    <TreeView
+                        expanded={expanded}
+                        onNodeToggle={(_ev, nodes): void => {
+                            // TODO вынести все в отдельный компонент, а хэндлер сделать методом
+                            console.log([...expanded], nodes);
+                            expanded.replace(nodes);
+                        }}
+                        defaultCollapseIcon={<ExpandMore />}
+                        defaultExpandIcon={<ChevronRight />}
+                    >
                         <BookmarkTree root={root} />
                     </TreeView>
                 );

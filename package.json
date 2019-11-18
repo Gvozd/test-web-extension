@@ -28,6 +28,7 @@
   "dependencies": {
     "@babel/runtime": "^7.10.2",
     "@material-ui/core": "^4.6.1",
+    "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.32",
     "JSONSelect": "^0.4.0",
     "advanced-css-reset": "^1.1.1",
@@ -39,6 +40,7 @@
     "mobx": "^5.15.0",
     "mobx-react": "^6.1.4",
     "mobx-utils": "^5.5.2",
+    "promise-all-properties": "^2.1.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "typeface-roboto": "^0.0.75",
