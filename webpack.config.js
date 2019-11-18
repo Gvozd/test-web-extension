@@ -98,6 +98,10 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'file-loader?name=/css/fonts/[name].[ext]'
+      },
+      {
         test: /\.(sa|sc|c)ss$/,
         use: [
           {

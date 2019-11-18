@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import 'typeface-roboto';
+import 'typeface-roboto';
 // import {browser, Bookmarks} from 'webextension-polyfill-ts';
 // import * as d3 from 'd3';
 // import render from './Graph/ui.js';
