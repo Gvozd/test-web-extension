@@ -46,7 +46,7 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
     }
 
     set title(value: string) {
-        this._title = value + metaSeparator + JSON.stringify(this.meta);
+        this._title = value + (this.meta.tags.length ? metaSeparator + JSON.stringify(this.meta) : '');
     }
 
     @computed
@@ -55,7 +55,7 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
     }
 
     set meta(value: {tags: string[]}) {
-        this._title = this.title + metaSeparator + JSON.stringify(value);
+        this._title = this.title + (value.tags.length ? metaSeparator + JSON.stringify(value) : '');
     }
 
     @computed
