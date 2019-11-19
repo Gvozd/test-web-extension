@@ -2,7 +2,7 @@ import {createAtom, IAtom, computed} from 'mobx';
 import {EventEmitter} from 'events';
 import {Bookmarks, browser} from 'webextension-polyfill-ts';
 import {autobind} from 'core-decorators';
-// import {safeLoad} from 'js-yaml';
+import {safeLoad} from 'js-yaml';
 
 const nodesEvents = new EventEmitter();
 nodesEvents.setMaxListeners(Infinity);
@@ -12,6 +12,8 @@ browser.bookmarks.onChanged.addListener((id, data: Bookmarks.OnChangedChangeInfo
         nodesEvents.emit(`url:${id}`, data.url);
     }
 });
+
+const metaSeparator = '@@';
 
 export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
     constructor(node: Bookmarks.BookmarkTreeNode) {
@@ -40,10 +42,28 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
 
     @computed
     get title(): string {
-        return this.getNode().title || '';
+        return this.parseMetaData().title;
     }
 
     set title(value: string) {
+        this._title = value + metaSeparator + JSON.stringify(this.meta);
+    }
+
+    @computed
+    get meta(): {tags: string[]} {
+        return this.parseMetaData().meta;
+    }
+
+    set meta(value: {tags: string[]}) {
+        this._title = this.title + metaSeparator + JSON.stringify(value);
+    }
+
+    @computed
+    get _title(): string {
+        return this.getNode().title || '';
+    }
+
+    set _title(value: string) {
         this.getNode().title = value;
         browser.bookmarks.update(this.id, {
             title: value
@@ -65,22 +85,27 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
         return this.node;
     }
 
-    // private getMetaData(): BookmarkMeta {
-    //     const separatedTitle = this.title.split('@@');
-    //     for (let start = separatedTitle.length - 1; start >= 0; start -= 1) {
-    //         for (let end = separatedTitle.length; end >= start; end -= 1) {
-    //             try {
-    //                 const json = safeLoad(separatedTitle.slice(start, end).join('@@')) as BookmarkMeta;
-    //                 if (typeof json === 'object' && json.tags) {
-    //                     return json;
-    //                 }
-    //             } catch(e) {
-    //                 // skip
-    //             }
-    //         }
-    //     }
-    //     return {tags: []};
-    // }
+    private parseMetaData(): { title: string, meta: BookmarkMeta} {
+        // TODO maybe computed
+        const separatedTitle = this._title.split(metaSeparator);
+        for (let start = separatedTitle.length - 1; start >= 0; start -= 1) {
+            try {
+                const json = safeLoad(separatedTitle.slice(start).join(metaSeparator)) as BookmarkMeta;
+                if (typeof json === 'object' && json.tags) {
+                    return {
+                        title: separatedTitle.slice(0, start).join(metaSeparator),
+                        meta: json
+                    };
+                }
+            } catch(e) {
+                // skip
+            }
+        }
+        return {
+            title: separatedTitle.join(metaSeparator),
+            meta: {tags: []}
+        }
+    }
 
     @autobind
     private subscribe(): void {
