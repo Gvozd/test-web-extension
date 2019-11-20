@@ -12,7 +12,10 @@
 		// my rules
 		"prettier/prettier": 0,
 		"no-use-before-define": 1,
-		"no-console": 1
+		"no-console": 1,
+		"class-methods-use-this": 1,
+		"react/no-set-state": 0,
+		"react/state-in-constructor": 1
 	},
 	"env": {
 		"webextensions": true

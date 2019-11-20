@@ -21,8 +21,8 @@ export default class BookmarksTree extends Component<AppData> {
             <TreeView
                 expanded={expanded.slice()}
                 onNodeToggle={this.onNodeToggle}
-                defaultCollapseIcon={<ExpandMore />}
-                defaultExpandIcon={<ChevronRight />}
+                defaultCollapseIcon={<ExpandMore fontSize='small'/>}
+                defaultExpandIcon={<ChevronRight fontSize='small'/>}
             >
                 <BookmarkTree root={root} />
             </TreeView>
