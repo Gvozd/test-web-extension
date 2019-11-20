@@ -42,8 +42,9 @@
     "mobx-react": "^6.1.4",
     "mobx-utils": "^5.5.2",
     "promise-all-properties": "^2.1.6",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^0.0.0-experimental-4ead6b530",
+    "react-devtools-inline": "^4.9.0",
+    "react-dom": "^0.0.0-experimental-4ead6b530",
     "typeface-roboto": "^0.0.75",
     "webext-base-css": "^1.1.0",
     "webextension-polyfill-ts": "^0.16.0"
