@@ -7,7 +7,7 @@ import BookmarkTree from './BookmarkTree';
 import {AppData} from '../model/AppModel';
 
 @observer
-export default class BookmarksTree extends Component<AppData> {
+export default class BookmarksTree extends Component<AppData & {foldersOnly: boolean}> {
     @autobind
     onNodeToggle(_ev: React.ChangeEvent<{}>, nodes: string[]): void {
         const {expanded} = this.props;
@@ -15,7 +15,7 @@ export default class BookmarksTree extends Component<AppData> {
     }
 
     render(): React.ReactNode  {
-        const {root, expanded} = this.props;
+        const {root, expanded, foldersOnly} = this.props;
 
         return (
             <TreeView
@@ -24,7 +24,7 @@ export default class BookmarksTree extends Component<AppData> {
                 defaultCollapseIcon={<ExpandMore fontSize='small'/>}
                 defaultExpandIcon={<ChevronRight fontSize='small'/>}
             >
-                <BookmarkTree root={root} />
+                <BookmarkTree root={root} foldersOnly={foldersOnly}/>
             </TreeView>
         );
     }

@@ -7,7 +7,7 @@ import promiseAllProperties from 'promise-all-properties';
 import {observable} from 'mobx';
 import {BookmarkTreeNode} from './model';
 import {AppData} from './model/AppModel';
-import BookmarksTree from './BookmarksTree';
+import Main from './Main';
 
 const rootId = '4921';
 
@@ -22,7 +22,7 @@ export default class App extends Component {
         return this.data.case({
             fulfilled({root, expanded}: AppData): ReactNode {
                 return (
-                    <BookmarksTree root={root} expanded={expanded} />
+                    <Main root={root} expanded={expanded} />
                 );
             },
             pending(): ReactNode {
