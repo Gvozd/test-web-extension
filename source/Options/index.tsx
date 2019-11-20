@@ -1,7 +1,10 @@
 import './setupDevtools';
-import React from 'react';
+import React, {StrictMode} from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
+import {CssBaseline} from '@material-ui/core';
+import {nest} from 'recompose';
+import {HashRouter} from 'react-router-dom';
 // import {browser, Bookmarks} from 'webextension-polyfill-ts';
 // import * as d3 from 'd3';
 // import render from './Graph/ui.js';
@@ -11,7 +14,16 @@ import 'typeface-roboto';
 
 import App from './App';
 
-ReactDOM.render(<App />, document.getElementById('options-root'));
+const AppWrapper = nest(
+    StrictMode,
+    CssBaseline,
+    HashRouter
+);
+
+ReactDOM.render(
+    <AppWrapper><App /></AppWrapper>,
+    document.getElementById('options-root')
+);
 
 // (window as typeof window & {d3: typeof d3}).d3 = d3;
 // const rootId = '4921';

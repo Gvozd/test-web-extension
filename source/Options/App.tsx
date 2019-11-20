@@ -5,6 +5,7 @@ import {fromPromise, IPromiseBasedObservable} from 'mobx-utils';
 import {observer} from 'mobx-react';
 import promiseAllProperties from 'promise-all-properties';
 import {observable} from 'mobx';
+import {Switch, Redirect, Route, RouteComponentProps} from 'react-router-dom';
 import {BookmarkTreeNode} from './model';
 import {AppData} from './model/AppModel';
 import Main from './Main';
@@ -22,7 +23,12 @@ export default class App extends Component {
         return this.data.case({
             fulfilled({root, expanded}: AppData): ReactNode {
                 return (
-                    <Main root={root} expanded={expanded} />
+                    <Switch>
+                        <Redirect exact from='/' to={`/main/${root.id}`} />
+                        <Route path='/main/:treeId?' component={(props: RouteComponentProps<{treeId: string}>): React.ReactElement => {
+                            return <Main {...props} root={root} expanded={expanded} />;
+                        }} />
+                    </Switch>
                 );
             },
             pending(): ReactNode {

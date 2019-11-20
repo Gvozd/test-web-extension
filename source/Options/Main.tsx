@@ -1,7 +1,9 @@
 import React from 'react';
-import {CssBaseline, Drawer, makeStyles} from '@material-ui/core';
+import {Drawer, makeStyles} from '@material-ui/core';
+import {RouteComponentProps} from 'react-router-dom';
 import {AppData} from './model/AppModel';
 import BookmarksTree from './BookmarksTree';
+import BookmarksList from './BookmarksList';
 
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
@@ -22,12 +24,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Main({root, expanded}: AppData): React.ReactNode {
+export default function Main(
+    {
+        root,
+        expanded,
+        // history,
+        match: {params: {treeId}}
+    }: AppData & RouteComponentProps<{treeId: string}>
+): React.ReactElement {
     const classes = useStyles({});
 
     return (
         <div className={classes.root}>
-            <CssBaseline/>
             <Drawer
                 className={classes.drawer}
                 variant="permanent"
@@ -38,9 +46,7 @@ export default function Main({root, expanded}: AppData): React.ReactNode {
             >
                 <BookmarksTree root={root} expanded={expanded} foldersOnly />
             </Drawer>
-            <main className={classes.content}>
-                content
-            </main>
+            <BookmarksList className={classes.content} root={root} treeId={treeId}/>
         </div>
     );
 }
