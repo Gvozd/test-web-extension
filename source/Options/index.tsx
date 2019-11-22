@@ -1,5 +1,5 @@
 import './setupDevtools';
-import React, {StrictMode} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import {CssBaseline} from '@material-ui/core';
@@ -15,7 +15,7 @@ import {HashRouter} from 'react-router-dom';
 import App from './App';
 
 const AppWrapper = nest(
-    StrictMode,
+    // StrictMode,//TODO antd@4
     CssBaseline,
     HashRouter
 );

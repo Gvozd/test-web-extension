@@ -1,31 +1,68 @@
 import {observer} from 'mobx-react';
-import React, {Component} from 'react';
-import {TreeView} from '@material-ui/lab';
-import {ChevronRight, ExpandMore} from '@material-ui/icons';
+import React, {Component, ReactElement} from 'react';
 import {autobind} from 'core-decorators';
-import BookmarkTree from './BookmarkTree';
+import {Tree} from 'antd';
 import {AppData} from '../model/AppModel';
+import BookmarkOptions from './BookmarkOptions';
+import {BookmarkTreeNode} from '../model';
 
 @observer
 export default class BookmarksTree extends Component<AppData & {foldersOnly: boolean}> {
     @autobind
-    onNodeToggle(_ev: React.ChangeEvent<{}>, nodes: string[]): void {
+    onNodeToggle(nodes: string[]): void {
         const {expanded} = this.props;
         expanded.replace(nodes);
     }
 
-    render(): React.ReactNode  {
-        const {root, expanded, foldersOnly} = this.props;
+    renderChildren(root: BookmarkTreeNode): ReactElement {
+        const {foldersOnly} = this.props;
+        const {id, title, children = []} = root;
 
         return (
-            <TreeView
-                expanded={expanded.slice()}
-                onNodeToggle={this.onNodeToggle}
-                defaultCollapseIcon={<ExpandMore fontSize='small'/>}
-                defaultExpandIcon={<ChevronRight fontSize='small'/>}
+            <Tree.TreeNode
+                key={id}
+                title={
+                    <>
+                        {title}
+                        <BookmarkOptions root={root} />
+                    </>
+                }
             >
-                <BookmarkTree root={root} foldersOnly={foldersOnly}/>
-            </TreeView>
+                {
+                    children
+                        .filter(node => {
+                            return foldersOnly ? node.children : true;
+                        })
+                        .map(node => {
+                            return this.renderChildren(node);
+                        })
+                }
+            </Tree.TreeNode>
+        );
+    }
+
+    render(): React.ReactNode  {
+        const {root, expanded} = this.props;
+
+        return (
+            <Tree
+                onExpand={this.onNodeToggle}
+                expandedKeys={expanded.slice()}
+
+                // TODO draggable
+                // blockNode
+                // draggable
+                // onDragEnter={this.onDragEnter}
+                // onDrop={this.onDrop}
+
+                // TODO icons
+                // defaultCollapseIcon={<ExpandMore fontSize='small'/>}
+                // defaultExpandIcon={<ChevronRight fontSize='small'/>}
+            >
+                {
+                    this.renderChildren(root)
+                }
+            </Tree>
         );
     }
 }
