@@ -3,6 +3,7 @@ import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import {Folder} from '@material-ui/icons';
 import {match} from 'JSONSelect';
 import {BookmarkTreeNode} from '../model';
+import BookmarkOptions from '../BookmarkOptions';
 
 export default class BookmarksList extends Component<{className: string, root: BookmarkTreeNode, treeId: string}>{
     render(): ReactElement {
@@ -12,11 +13,17 @@ export default class BookmarksList extends Component<{className: string, root: B
             <main className={className}>
                 <List>
                     {
-                        children.map(({id, title, children}) => {
+                        children.map((node) => {
+                            const {id, title, children} = node;
                             return (
                                 <ListItem key={id}>
                                     {children ? <ListItemIcon><Folder/></ListItemIcon> : null}
-                                    <ListItemText primary={title} />
+                                    <ListItemText primary={
+                                        <>
+                                            {title}
+                                            <BookmarkOptions root={node} />
+                                        </>
+                                    } />
                                 </ListItem>
                             );
                         })

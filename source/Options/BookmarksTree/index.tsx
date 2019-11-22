@@ -5,7 +5,7 @@ import Tree from 'antd/lib/tree';
 import 'antd/lib/tree/style/index.css';
 import {withRouter, RouteComponentProps} from 'react-router-dom';
 import {AppData} from '../model/AppModel';
-import BookmarkOptions from './BookmarkOptions';
+import BookmarkOptions from '../BookmarkOptions';
 import {BookmarkTreeNode} from '../model';
 
 @observer
