@@ -12,13 +12,13 @@ export default class BookmarksList extends Component<{className: string, root: B
             <main className={className}>
                 <List>
                     {
-                        children.map(node => {
+                        children.map(({id, title, children}) => {
                             return (
-                                <ListItem>
+                                <ListItem key={id}>
                                     <ListItemIcon>
-                                        {node.children ? <Folder/> : null}
+                                        {children ? <Folder/> : null}
                                     </ListItemIcon>
-                                    <ListItemText primary={node.title} />
+                                    <ListItemText primary={title} />
                                 </ListItem>
                             );
                         })
