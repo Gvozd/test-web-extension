@@ -15,9 +15,7 @@ export default class BookmarksList extends Component<{className: string, root: B
                         children.map(({id, title, children}) => {
                             return (
                                 <ListItem key={id}>
-                                    <ListItemIcon>
-                                        {children ? <Folder/> : null}
-                                    </ListItemIcon>
+                                    {children ? <ListItemIcon><Folder/></ListItemIcon> : null}
                                     <ListItemText primary={title} />
                                 </ListItem>
                             );
