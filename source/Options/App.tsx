@@ -25,7 +25,9 @@ export default class App extends Component {
                 return (
                     <Switch>
                         <Redirect exact from='/' to={`/main/${root.id}`} />
+                        <Redirect exact from='/main' to={`/main/${root.id}`} />
                         <Route path='/main/:treeId?' component={(props: RouteComponentProps<{treeId: string}>): React.ReactElement => {
+                            // TODO redirect, если такого treeId нет
                             return <Main {...props} root={root} expanded={expanded} />;
                         }} />
                     </Switch>

@@ -3,16 +3,23 @@ import React, {Component, ReactElement} from 'react';
 import {autobind} from 'core-decorators';
 import Tree from 'antd/lib/tree';
 import 'antd/lib/tree/style/index.css';
+import {withRouter, RouteComponentProps} from 'react-router-dom';
 import {AppData} from '../model/AppModel';
 import BookmarkOptions from './BookmarkOptions';
 import {BookmarkTreeNode} from '../model';
 
 @observer
-export default class BookmarksTree extends Component<AppData & {foldersOnly: boolean}> {
+class BookmarksTree extends Component<AppData & {foldersOnly: boolean} & RouteComponentProps<{treeId: string}>> {
     @autobind
     onNodeToggle(nodes: string[]): void {
         const {expanded} = this.props;
         expanded.replace(nodes);
+    }
+
+    @autobind
+    onSelect([treeId = this.props.match.params.treeId]: string[]): void {// eslint-disable-line react/destructuring-assignment
+        const {history} = this.props;
+        history.push(`/main/${treeId}`);
     }
 
     renderChildren(root: BookmarkTreeNode): ReactElement {
@@ -43,12 +50,16 @@ export default class BookmarksTree extends Component<AppData & {foldersOnly: boo
     }
 
     render(): React.ReactNode  {
-        const {root, expanded} = this.props;
+        const {root, expanded, match: {params: {treeId}}} = this.props;
 
         return (
             <Tree
                 onExpand={this.onNodeToggle}
                 expandedKeys={expanded.slice()}
+
+                selectedKeys={[treeId]}
+                onSelect={this.onSelect}
+                style={{userSelect: 'none'}}
 
                 // TODO draggable
                 // blockNode
@@ -67,3 +78,5 @@ export default class BookmarksTree extends Component<AppData & {foldersOnly: boo
         );
     }
 }
+
+export default withRouter(BookmarksTree);
