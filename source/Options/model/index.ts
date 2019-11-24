@@ -3,15 +3,7 @@ import {EventEmitter} from 'events';
 import {Bookmarks, browser} from 'webextension-polyfill-ts';
 import {autobind} from 'core-decorators';
 import {safeLoad} from 'js-yaml';
-
-const nodesEvents = new EventEmitter();
-nodesEvents.setMaxListeners(Infinity);
-browser.bookmarks.onChanged.addListener((id, data: Bookmarks.OnChangedChangeInfoType) => {
-    nodesEvents.emit(`title:${id}`, data.title);
-    if ('url' in data) {
-        nodesEvents.emit(`url:${id}`, data.url);
-    }
-});
+import {BookmarksObserver, subscribe as bookmarksObserverSubscribe} from './BookmarksObserver';
 
 const metaSeparator = '@@';
 
@@ -65,10 +57,11 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
 
     set _title(value: string) {
         this.getNode().title = value;
-        browser.bookmarks.update(this.id, {
+        const updatedBookmarkPromise = browser.bookmarks.update(this.id, {
             title: value
         });
         this.atom.reportChanged();
+        // await updatedBookmarkPromise;// TODO проверить что все правильно задалось
     }
 
     // parentId?: string;
@@ -109,14 +102,15 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
 
     @autobind
     private subscribe(): void {
-        nodesEvents.addListener(`title:${this.node.id}`, this.onChangeTitle);
-        nodesEvents.addListener(`url:${this.node.id}`, this.onChangeUrl);
+        bookmarksObserverSubscribe();
+        BookmarksObserver.addListener(`title:${this.node.id}`, this.onChangeTitle);
+        BookmarksObserver.addListener(`url:${this.node.id}`, this.onChangeUrl);
     }
 
     @autobind
     private unsubscribe(): void {
-        nodesEvents.removeListener(`title:${this.node.id}`, this.onChangeTitle);
-        nodesEvents.removeListener(`url:${this.node.id}`, this.onChangeUrl);
+        BookmarksObserver.removeListener(`title:${this.node.id}`, this.onChangeTitle);
+        BookmarksObserver.removeListener(`url:${this.node.id}`, this.onChangeUrl);
     }
 
     @autobind
