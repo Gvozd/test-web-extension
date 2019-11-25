@@ -16,28 +16,54 @@ beforeEach(() => {
 
 it('base', () => {
     const node = new BookmarkTreeNode(tree);
-    expect(node.title).toEqual('root');
-    expect(node.meta).toEqual({tags: []});
     expect(node.children).toHaveLength(1);
 });
 
-describe('изменение title', () => {
-    it('должен подписываться и отписываться', () => {
+describe.each([
+    [
+        'title',
+        ['root', 'root1', 'root1'],
+        {title: 'root1'},
+    ],
+    [
+        'meta',
+        [{tags: []}, {tags: ['tag 1']}, {tags: ['tag 2']}],
+        {title: 'root@@{"tags":["tag 1"]}'},
+        // it.todo('замена только tags');
+        // it.todo('замена внутри tags');
+    ],
+// @ts-ignore
+])('работа свойства `%s`', (key: 'title' | 'meta', [initValue, value1, value2]: any[], updateValue: any) => {
+    it('базовое значение после конструирования', () => {
+        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
+        expect(node[key]).toEqual(initValue);
+    });
+
+    it('должен сохранятся в Extension API', () => {
+        const node = new BookmarkTreeNode(tree);
+        const update = jest.spyOn(browser.bookmarks, 'update');
+
+        node[key] = value1;
+        expect(node[key]).toEqual(value1);
+        expect(update).lastCalledWith('1', updateValue);
+    });
+
+    it('при внешнем наблюдении должен подписываться и отписываться на свой атом', () => {
         const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
         expect(node.atom.isBeingObserved).toEqual(false);
 
         const onReaction = jest.fn((val) => {return val;});
-        const disposer = reaction(() => {return node.title}, onReaction);
+        const disposer = reaction(() => node[key], onReaction);
         expect(node.atom.isBeingObserved).toEqual(true);
 
-        node.title = 'root2';
-        expect(onReaction).toHaveLastReturnedWith('root2');
+        node[key] = value1;// TODO проверить другие способы изменения для meta
+        expect(onReaction).toHaveLastReturnedWith(value1);
 
         disposer();
         expect(node.atom.isBeingObserved).toEqual(false);
 
-        node.title = 'root3';
-        expect(onReaction).toHaveLastReturnedWith('root2');
+        node[key] = value2;
+        expect(onReaction).toHaveLastReturnedWith(value1);
         expect(onReaction).toHaveBeenCalledTimes(1);
     });
 
@@ -45,71 +71,15 @@ describe('изменение title', () => {
         const node1 = new BookmarkTreeNode(tree);
         const node2 = new BookmarkTreeNode(tree);
         const onReaction = jest.fn(() => null);
-        const disposer = reaction(() => node2.title, onReaction);
+        const disposer = reaction(() => node2[key], onReaction);
 
-        node1.title = 'root2';
-        expect(node1.title).toEqual('root2');
-        expect(node2.title).toEqual('root');
-
-        jest.runAllTimers();
-        expect(node2.title).toEqual('root2');
-
-        disposer();
-    });
-
-    it('должен сохранятся', () => {
-        const node = new BookmarkTreeNode(tree);
-        const update = jest.spyOn(browser.bookmarks, 'update');
-        node.title = 'root2';
-        expect(node.title).toEqual('root2');
-        expect(update).lastCalledWith('1', {title: 'root2'});
-    });
-});
-
-describe('изменение meta', () => {
-    it('должен подписываться и отписываться', () => {
-        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
-        expect(node.atom.isBeingObserved).toEqual(false);
-
-        const onReaction = jest.fn((val) => {return JSON.parse(val);});
-        const disposer = reaction(() => {return JSON.stringify(node.meta)}, onReaction);
-        expect(node.atom.isBeingObserved).toEqual(true);
-
-        node.meta = {tags: ['tag 1']};// TODO проверить другие способы изменения
-        expect(onReaction).toHaveLastReturnedWith({tags: ['tag 1']});
-
-        disposer();
-        expect(node.atom.isBeingObserved).toEqual(false);
-
-        node.meta = {tags: ['tag 2']};
-        expect(onReaction).toHaveLastReturnedWith({tags: ['tag 1']});
-        expect(onReaction).toHaveBeenCalledTimes(1);
-    });
-
-
-    it('должен реагировать на внешнее изменение', () => {
-        const node1 = new BookmarkTreeNode(tree);
-        const node2 = new BookmarkTreeNode(tree);
-        const onReaction = jest.fn(() => null);
-        const disposer = reaction(() => node2.meta, onReaction);
-
-        node1.meta = {tags: ['some tag']};// TODO проверить другие способы изменения
-        expect(node1.meta).toEqual({tags: ['some tag']});
-        expect(node2.meta).toEqual({tags: []});
+        node1[key] = value1;// TODO проверить другие способы изменения
+        expect(node1[key]).toEqual(value1);
+        expect(node2[key]).toEqual(initValue);
 
         jest.runAllTimers();
-        expect(node2.meta).toEqual({tags: ['some tag']});
+        expect(node2[key]).toEqual(value1);
 
         disposer();
     });
-
-    it('Полная замена', () => {
-        const node = new BookmarkTreeNode(tree);
-        const update = jest.spyOn(browser.bookmarks, 'update');
-        node.meta = {tags: ['some tag']};
-        expect(node.title).toEqual('root');
-        expect(update).lastCalledWith('1', {title: 'root@@{"tags":["some tag"]}'});
-    });
-    it.todo('замена только tags');
-    it.todo('замена внутри tags');
 });
