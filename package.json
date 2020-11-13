@@ -100,7 +100,6 @@
     "resolve-url-loader": "^3.1.1",
     "sass-loader": "^8.0.2",
     "terser-webpack-plugin": "^2.3.7",
-    "ts-import-plugin": "^1.6.1",
     "typescript": "^3.9.5",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
