@@ -1,5 +1,6 @@
 import React from 'react';
-import {Drawer, makeStyles} from '@material-ui/core';
+import {Drawer} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 import {RouteComponentProps} from 'react-router-dom';
 import {AppData} from './model/AppModel';
 import BookmarksTree from './BookmarksTree';

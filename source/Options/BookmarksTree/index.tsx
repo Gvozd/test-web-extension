@@ -1,8 +1,7 @@
 import {observer} from 'mobx-react';
 import React, {Component, ReactElement} from 'react';
 import {autobind} from 'core-decorators';
-import Tree from 'antd/lib/tree';
-import 'antd/lib/tree/style/index.css';
+import {Tree} from 'antd';
 import {withRouter, RouteComponentProps} from 'react-router-dom';
 import {AppData} from '../model/AppModel';
 import BookmarkOptions from '../BookmarkOptions';
