@@ -1,11 +1,9 @@
+/* eslint dot-notation: [2, { "allowPattern": "^atom$" }] */
 import {Bookmarks, browser} from 'webextension-polyfill-ts';
-import {IAtom, reaction} from 'mobx';
+import {reaction} from 'mobx';
 import {Browser} from '../../../__mocks__/webextension-polyfill-ts';
 import {BookmarkTreeNode} from './index';
 
-interface BookmarkTreeNodeTested extends Omit<BookmarkTreeNode, ""> {
-    atom: IAtom;
-}
 let tree: Bookmarks.BookmarkTreeNode;
 beforeEach(() => {
     Error.stackTraceLimit = 1e3;
@@ -19,7 +17,9 @@ it('base', () => {
     expect(node.children).toHaveLength(1);
 });
 
-describe.each([
+type TestDataType<T, K extends keyof T> = [K, T[K][], { title: string }];
+
+describe.each<TestDataType<BookmarkTreeNode, 'title'> | TestDataType<BookmarkTreeNode, 'meta'>>([
     [
         'title',
         ['root', 'root1', 'root1'],
@@ -32,10 +32,9 @@ describe.each([
         // it.todo('замена только tags');
         // it.todo('замена внутри tags');
     ],
-// @ts-ignore
-])('работа свойства `%s`', (key: 'title' | 'meta', [initValue, value1, value2]: any[], updateValue: any) => {
+])('работа свойства `%s`', <K extends 'title' | 'meta'>(...[key, [initValue, value1, value2], updateValue]: TestDataType<BookmarkTreeNode, K>) => {
     it('базовое значение после конструирования', () => {
-        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
+        const node = new BookmarkTreeNode(tree);
         expect(node[key]).toEqual(initValue);
     });
 
@@ -49,18 +48,18 @@ describe.each([
     });
 
     it('при внешнем наблюдении должен подписываться и отписываться на свой атом', () => {
-        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
-        expect(node.atom.isBeingObserved).toEqual(false);
+        const node = new BookmarkTreeNode(tree) ;
+        expect(node['atom'].isBeingObserved).toEqual(false);
 
         const onReaction = jest.fn((val) => {return val;});
         const disposer = reaction(() => node[key], onReaction);
-        expect(node.atom.isBeingObserved).toEqual(true);
+        expect(node['atom'].isBeingObserved).toEqual(true);
 
         node[key] = value1;// TODO проверить другие способы изменения для meta
         expect(onReaction).toHaveLastReturnedWith(value1);
 
         disposer();
-        expect(node.atom.isBeingObserved).toEqual(false);
+        expect(node['atom'].isBeingObserved).toEqual(false);
 
         node[key] = value2;
         expect(onReaction).toHaveLastReturnedWith(value1);
