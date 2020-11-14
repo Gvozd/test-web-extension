@@ -27,7 +27,7 @@ export default class BookmarksList extends Component<{className: string, root: B
                                             {title}
                                             <BookmarkOptions root={node} />
                                             {tags.map((tag) => {
-                                                return <Tag>{tag}</Tag>;
+                                                return <Tag key={tag}>{tag}</Tag>;
                                             })}
                                         </>
                                     } />
