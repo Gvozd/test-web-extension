@@ -54,8 +54,8 @@ export default class BookmarkOptions extends Component<{root: BookmarkTreeNode}>
                     open={isEdited}
                     onClose={this.onStopEdit}
                     aria-labelledby="form-dialog-title"
-                    onClick={this.stopPropagation}
-                    onKeyDown={this.stopPropagation}// TODO предотвращает не только работу дерева(для чего и сделано), но и выход по Esc
+                    onClick={this.stopPropagation} // предовращает выбор элемент,если открыли диалог для неактивного, а затем кликнул в самом диалоге
+                    // onKeyDown={this.stopPropagation}// нужен чтобы предотвратить навигацию по дереву, находясь в диалоге. Но кажется это и без этого отлично обрабатывается, потому что перхватывает фокус и tab-навигацию на себя
                 >
                     <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                     <DialogContent>
