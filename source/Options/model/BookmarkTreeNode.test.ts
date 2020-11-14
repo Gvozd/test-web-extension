@@ -1,12 +1,16 @@
-import {browser} from 'webextension-polyfill-ts';
-import { reaction} from 'mobx';
+import {Bookmarks, browser} from 'webextension-polyfill-ts';
+import {IAtom, reaction} from 'mobx';
+import {Browser} from '../../../__mocks__/webextension-polyfill-ts';
 import {BookmarkTreeNode} from './index';
 
-let tree;
+interface BookmarkTreeNodeTested extends Omit<BookmarkTreeNode, ""> {
+    atom: IAtom;
+}
+let tree: Bookmarks.BookmarkTreeNode;
 beforeEach(() => {
     Error.stackTraceLimit = 1e3;
-    (browser as any)._reset();
-    tree = (browser as any)._state.tree;
+    (browser as unknown as Browser)._reset();
+    tree = (browser as unknown as Browser)._state.tree;
     jest.useFakeTimers();
 });
 
@@ -19,7 +23,7 @@ it('base', () => {
 
 describe('изменение title', () => {
     it('должен подписываться и отписываться', () => {
-        const node: any = new BookmarkTreeNode(tree);
+        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
         expect(node.atom.isBeingObserved).toEqual(false);
 
         const onReaction = jest.fn((val) => {return val;});
@@ -38,8 +42,8 @@ describe('изменение title', () => {
     });
 
     it('должен реагировать на внешнее изменение', () => {
-        const node1: any = new BookmarkTreeNode(tree);
-        const node2: any = new BookmarkTreeNode(tree);
+        const node1 = new BookmarkTreeNode(tree);
+        const node2 = new BookmarkTreeNode(tree);
         const onReaction = jest.fn(() => null);
         const disposer = reaction(() => node2.title, onReaction);
 
@@ -64,7 +68,7 @@ describe('изменение title', () => {
 
 describe('изменение meta', () => {
     it('должен подписываться и отписываться', () => {
-        const node: any = new BookmarkTreeNode(tree);
+        const node = new BookmarkTreeNode(tree) as unknown as BookmarkTreeNodeTested;
         expect(node.atom.isBeingObserved).toEqual(false);
 
         const onReaction = jest.fn((val) => {return JSON.parse(val);});
@@ -84,8 +88,8 @@ describe('изменение meta', () => {
 
 
     it('должен реагировать на внешнее изменение', () => {
-        const node1: any = new BookmarkTreeNode(tree);
-        const node2: any = new BookmarkTreeNode(tree);
+        const node1 = new BookmarkTreeNode(tree);
+        const node2 = new BookmarkTreeNode(tree);
         const onReaction = jest.fn(() => null);
         const disposer = reaction(() => node2.meta, onReaction);
 

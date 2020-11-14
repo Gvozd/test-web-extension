@@ -1,5 +1,4 @@
 import {createAtom, IAtom, computed} from 'mobx';
-import {EventEmitter} from 'events';
 import {Bookmarks, browser} from 'webextension-polyfill-ts';
 import {autobind} from 'core-decorators';
 import {safeLoad} from 'js-yaml';
@@ -57,7 +56,7 @@ export class BookmarkTreeNode implements Bookmarks.BookmarkTreeNode {
 
     set _title(value: string) {
         this.getNode().title = value;
-        const updatedBookmarkPromise = browser.bookmarks.update(this.id, {
+        browser.bookmarks.update(this.id, {
             title: value
         });
         this.atom.reportChanged();

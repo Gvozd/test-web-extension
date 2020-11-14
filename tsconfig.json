@@ -19,6 +19,7 @@
 	],
 	"include": [
 		"source",
+		"__mocks__",
 		"webpack.config.js"
 	]
 }
