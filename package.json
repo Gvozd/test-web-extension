@@ -113,11 +113,8 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^4.2.0",
     "webpack-extension-reloader": "^1.1.4",
-    "webpack-notifier": "^1.8.0",
+    "webpack-notifier": "^1.10.0",
     "wext-manifest-loader": "^2.2.1",
     "wext-manifest-webpack-plugin": "^1.2.1"
-  },
-  "resolutions": {
-    "node-notifier": "8.0.0"
   }
 }
