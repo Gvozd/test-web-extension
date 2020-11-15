@@ -51,15 +51,15 @@ function syncCssVariables(window: Window): void {
 }
 
 function syncStyles(window: Window): void {
-    for (const link of document.head.getElementsByTagName('link')) {
-        console.log('___link added 1');
-        window.document.head.appendChild(link.cloneNode());
+    for (const link of document.head.getElementsByTagName('style')) {
+        console.log('___style added 1');
+        window.document.head.appendChild(link.cloneNode(true));
     }
     new MutationObserver((mutations) => {
         for (const {addedNodes} of mutations) {
             for (const node of (addedNodes || [])) {
-                if (node instanceof Element && node.tagName === 'LINK') {
-                    window.document.head.appendChild(node.cloneNode());
+                if (node instanceof Element && node.tagName === 'STYLE') {
+                    window.document.head.appendChild(node.cloneNode(true));
                 }
             }
         }
